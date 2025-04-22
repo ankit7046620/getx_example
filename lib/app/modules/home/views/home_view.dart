@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getx/app/modules/home/controllers/home_controller.dart';
 import 'package:getx/common/component/common_elevated_button.dart';
 import 'package:getx/common/component/custom_text_field.dart';
@@ -56,7 +57,7 @@ class HomeView extends GetView<HomeController> {
                   CommonElevatedButton(
                     onPressed: () {
                       if (logic.validateForm(logic.formKey)) {
-                        AppFunction.goToAndReplace(Routes.USER);
+                        TGLog.d("hello");
                         //logic.callLoginApi();
                       }
                     },
@@ -64,6 +65,15 @@ class HomeView extends GetView<HomeController> {
                     child: TGText.labelSmall(LabelConstants.buttonLogin, color: Colors.white),
                   ),
                   SizedBox(height: SizeType.xxxxxxxxxxxs.h),
+
+                  CommonElevatedButton(
+                    icon: Icon(FontAwesomeIcons.google, color: Colors.white),
+                    onPressed: () {
+                      controller.signInWithGoogle(context);
+                    },
+                    width: double.infinity,
+                    child: TGText.labelSmall(LabelConstants.buttonLogin, color: Colors.white),
+                  ),
                 ],
               ),
             ),

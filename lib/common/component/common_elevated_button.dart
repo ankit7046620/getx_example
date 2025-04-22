@@ -10,6 +10,7 @@ class CommonElevatedButton extends StatelessWidget {
   final Clip clipBehavior;
   final double? height;
   final double? width;
+  final Widget? icon; // New optional icon
   final Key? key;
 
   const CommonElevatedButton({
@@ -23,6 +24,7 @@ class CommonElevatedButton extends StatelessWidget {
     this.clipBehavior = Clip.none,
     this.height,
     this.width,
+    this.icon,
   });
 
   @override
@@ -45,7 +47,7 @@ class CommonElevatedButton extends StatelessWidget {
         focusNode: focusNode,
         autofocus: autofocus,
         clipBehavior: clipBehavior,
-        child: child,
+        child: icon != null ? Row(mainAxisSize: MainAxisSize.min, children: [icon!, const SizedBox(width: 8), child]) : child,
       ),
     );
   }

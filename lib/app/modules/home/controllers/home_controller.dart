@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:getx/common/import/common_getx.dart';
 import 'package:getx/common/import/common_import.dart';
 import 'package:getx/common/import/common_tg_utils.dart';
+import 'package:getx/constant/app_const.dart';
 import 'package:getx/manager/service_manger.dart';
 import 'package:getx/request/login_request.dart';
 import 'package:getx/response/login_response.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:techgrains/com/techgrains/service/request/tg_post_request.dart';
 
 class HomeController extends GetxController {
@@ -38,6 +42,8 @@ class HomeController extends GetxController {
     return isValid;
   }
 
+  final GoogleSignIn _googleSignIn = GoogleSignIn(clientId: (Platform.isAndroid) ? AppConstant.googleSignInClientIdAndroid : AppConstant.googleSignInClientIdIOS);
+
   //
   callLoginApi() async {
     EasyLoading.show(status: 'loading...');
@@ -62,6 +68,32 @@ class HomeController extends GetxController {
     EasyLoading.dismiss();
     update();
     TGLog.d("_onSuccessLogin:");
+  }
+
+  Future<bool> signInWithGoogle(context) async {
+    EasyLoading.show(status: 'Signing in...');
+    if (await _googleSignIn.isSignedIn()) {
+      await _googleSignIn.signOut();
+    }
+
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        EasyLoading.dismiss();
+        return false;
+      }
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      TGLog.d("Token is: ${googleAuth.idToken}");
+      EasyLoading.dismiss();
+
+      TGLog.d("GoogleSignIn...Token > ${googleAuth.idToken}");
+      return true;
+      //ADD YOUR API CALL HERE
+    } catch (err) {
+      EasyLoading.dismiss();
+      TGLog.d("GoogleSignIn...Error > $err");
+      return false;
+    }
   }
 
   _gotoUserInfoScreen() {
